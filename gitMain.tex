@@ -1,0 +1,230 @@
+% ====================================================================
+%   그리기 패키지  --> 모두 뺴기.
+% 
+%  이 패키지는 Cation에 footnote를 추가하면 footnote 내용이 보이지 않음
+%  원인은 잘 모르지만, 회로 그림은 별도로 그려서(pdf 로 만들어서 ) 사용을 해야 할 것 같음.
+%
+% \usepackage[siunitx, RPvoltages]{circuitikz}  % 회로부품 그리기.
+%%
+%%  TikZ -  초기 선언문 
+%\usepackage{tikz} 
+%\usepackage{pgfplotstable}
+%\usepackage{pgfplots}
+%\usetikzlibrary{arrows,patterns}
+%\usetikzlibrary{decorations.markings}
+%
+%   모든 그림(tikz, circuit)은 pdf 로 불러오기.  2021.09.03.
+%
+% ====================================================================
+
+\documentclass[a4paper]{book} 
+
+\usepackage[hangul]{kotex}  % 좀 더 다양한 한글 표현이 가능
+\usepackage{adjustbox} %this
+%\usepackage{kotex}  
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{amsthm}
+\usepackage{amssymb} % 수학의 그러므로를 표현하기 위함 
+\usepackage{ulem} % 글자 취소선 넣기  \sout{  ... }
+\usepackage[]{mcode} % MATLAB code 넣기. mcode.sty 다운 받기 https://strikers01.tistory.com/329
+%\usepackage[]{mypaper}
+
+\usepackage{listings}  % 출처 :  https://frombc7197.tistory.com/5224
+\lstset{numbers = left, numbersep=8pt, breaklines=true} % CODE에 줄번호 넣고 싶을 떄...
+
+\usepackage[most]{tcolorbox}
+
+% 색상의 채워진 삼각형을 그리기 위함.
+\usepackage{etoolbox}
+\usepackage{tikz}
+%\newrobustcmd*{\square}[1]{\tikz{\filldraw[draw=#1,fill=#1] (0,0) rectangle (0.2cm,0.2cm);}}
+\newrobustcmd*{\mycircle}[1]{\tikz{\filldraw[draw=#1,fill=#1] (0,0) circle [radius=0.1cm];}}
+\newrobustcmd*{\mytriangle}[1]{\tikz{\filldraw[draw=#1,fill=#1] (0,0) -- (0.2cm,0) -- (0.1cm,0.2cm);}}
+% [ex]
+%   a circle \mycircle{green} and a triangle \mytriangle{blue}
+ % ==================================
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  출처 : https://texblog.org/2015/09/30/fancy-boxes-for-theorem-lemma-and-proof-with-mdframed/
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%DIFINITION
+\newcounter{defi}[section] \setcounter{defi}{0}
+\renewcommand{\thedefi}{\arabic{section}.\arabic{defi}}
+\newenvironment{defi}[2][]{%
+\refstepcounter{defi}%
+\ifstrempty{#1}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=blue!20]
+{\strut DEFINITION~\thedefi};}}
+}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=blue!20]
+{\strut DEFINITION~\thedefi:~#1};}}%
+}%
+\mdfsetup{innertopmargin=10pt,linecolor=blue!20,%
+linewidth=2pt,topline=true,%
+frametitleaboveskip=\dimexpr-\ht\strutbox\relax
+}
+\begin{mdframed}[]\relax%
+\label{#2}}{\end{mdframed}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Theorem
+\newcounter{theo}[section] \setcounter{theo}{0}
+\renewcommand{\thetheo}{\arabic{section}.\arabic{theo}}
+\newenvironment{theo}[2][]{%
+\refstepcounter{theo}%
+\ifstrempty{#1}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=blue!20]
+{\strut Theorem~\thetheo};}}
+}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=blue!20]
+{\strut Theorem~\thetheo:~#1};}}%
+}%
+\mdfsetup{innertopmargin=10pt,linecolor=blue!20,%
+linewidth=2pt,topline=true,%
+frametitleaboveskip=\dimexpr-\ht\strutbox\relax
+}
+\begin{mdframed}[]\relax%
+\label{#2}}{\end{mdframed}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Lemma
+\newcounter{lem}[section] \setcounter{lem}{0}
+\renewcommand{\thelem}{\arabic{section}.\arabic{lem}}
+\newenvironment{lem}[2][]{%
+\refstepcounter{lem}%
+\ifstrempty{#1}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=green!20]
+{\strut Lemma~\thelem};}}
+}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=green!20]
+{\strut Lemma~\thelem:~#1};}}%
+}%
+\mdfsetup{innertopmargin=10pt,linecolor=green!20,%
+linewidth=2pt,topline=true,%
+frametitleaboveskip=\dimexpr-\ht\strutbox\relax
+}
+\begin{mdframed}[]\relax%
+\label{#2}}{\end{mdframed}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Proof
+\newcounter{prf}[section]\setcounter{prf}{0}
+\renewcommand{\theprf}{\arabic{section}.\arabic{prf}}
+\newenvironment{prf}[2][]{%
+\refstepcounter{prf}%
+\ifstrempty{#1}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=red!20]
+{\strut Proof~\theprf};}}
+}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=red!20]
+{\strut Proof~\theprf:~#1};}}%
+}%
+\mdfsetup{innertopmargin=10pt,linecolor=red!20,%
+linewidth=2pt,topline=true,%
+frametitleaboveskip=\dimexpr-\ht\strutbox\relax
+}
+\begin{mdframed}[]\relax%
+\label{#2}}{\qed\end{mdframed}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{nameref}   % reference 이름으로 링크를 걸고 싶은 경우.
+% 목차 또는 ref 에 마우스 클릭시 페이지 이동하는 부분.
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue, % 연결 문구의 색상을 정의 한다.
+    citecolor=black,
+    filecolor=black,
+    urlcolor=black,
+}
+
+\usepackage{amsfonts}  % https://www.physicsread.com/latex-mathbb/
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{color} % 글자 색상을 바꾸는 패키지. \textcolor
+%\usepackage{verbatim}  % 문서내 코드 넣기 - https://ka373.tistory.com/41
+
+
+\usepackage{multirow}	% 셀 병합을 위하여 사용하는 패키지. (https://tablesgenerator.com)
+\usepackage{ftnxtra}  % caption 에 footnote 넣기 위한 패키지. https://tex.stackexchange.com/questions/10181/using-footnote-in-a-figures-caption
+\usepackage{fnpos} % \makeFNbelow by default 
+
+% 그림 배치를 왼쪽/중간/오른쪽 글씨 겹침에 사용함
+% 출처 : http://www.ktug.org/xe/index.php?document_srl=243219&mid=KTUG_open_board
+\usepackage{wrapfig}
+
+\usepackage[onehalfspacing]{setspace}  % singlespacing, onehalfspacing, doublespacing 
+\usepackage[left=2.5cm,right=4.5cm,top=5cm,bottom=4cm,a4paper]{geometry}
+
+% 패키지의 위치에 따라 에러가 날수도 안날수도 있음.
+
+%\usepackage[table,xcdraw]{xcolor} % 표(table)의 배경색을 넣기 위함.
+%\usepackage{alertmessage}% ==========
+%  \alertinfo{}
+%  \alertsuccess{}
+% \alertwarning{}
+% \alerterror{}
+ % ==================================
+
+
+
+
+\usepackage{makeidx}  % index 전처리.
+\makeindex
+
+% Header and Footer Stuff
+% https://ko.overleaf.com/learn/latex/Headers_and_footers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+%\fancyfoot[R]{\thepage}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[RE,LO]{\leftmark}
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{1pt}
+
+% ====================================================================
+% ====================================================================
+
+\author{여동훈  } 
+\title{ 공돌이의 수학정리노트} 
+
+\begin{document} 
+
+%	\maketitle
+
+%	\tableofcontents  
+%	\listoffigures
+%	\listoftables
+
+	\input{gitStudy.tex}
+
+%  	 \input{phasor.tex}
+%  	\input{impulse.tex}
+
+	\printindex
+\end{document} 
